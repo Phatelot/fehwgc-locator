@@ -3,7 +3,9 @@
 	let imgEl: HTMLImageElement;
 
 	const minScale = 1;
-	const maxScale = 8;
+	let maxScale = $state(2);
+
+	const borderPx = 2;
 
 	let {
 		src = "",
@@ -46,23 +48,9 @@
 	function onDrag(event: PointerEvent | TouchEvent) {
 		if (event instanceof TouchEvent && event.touches.length === 2) {
 			const newDist = getDistance(event.touches);
-			const newScale = clampNumber(startScale * (newDist / startDist), minScale, maxScale);
-
-			const rect = container.getBoundingClientRect();
-			const [cx, cy] = [
-				pinchCenterX - rect.left - rect.width/2,
-				pinchCenterY - rect.top - rect.height/2,
-			];
-
-			const imgCenterX = cx - x;
-			const imgCenterY = cy - y;
-
-			const scaleRatio = newScale / scale;
-			x -= imgCenterX * (scaleRatio - 1);
-			y -= imgCenterY * (scaleRatio - 1);
-			scale = newScale;
-
+			changeScale(startScale * (newDist / startDist), pinchCenterX, pinchCenterY);
 			clampPosition();
+			event.preventDefault();
 			return;
 		}
 
@@ -80,13 +68,19 @@
 	}
 
 	function onWheel(event: WheelEvent) {
-		const oldScale = scale;
 		let newScale = scale + event.deltaY * -0.001;
-		newScale = clampNumber(newScale, minScale, maxScale);
+		changeScale(newScale, event.clientX, event.clientY);
+		event.preventDefault();
+	}
+
+	function changeScale(newScale: number, centerX: number, centerY: number) {
+		const oldScale = scale;
 
 		const rect = container.getBoundingClientRect();
-		const cx = event.clientX - rect.left - rect.width/2;
-		const cy = event.clientY - rect.top - rect.height/2;
+		maxScale = imgEl.naturalWidth / container.getBoundingClientRect().width * 2
+		newScale = clampNumber(newScale, minScale, maxScale);
+		const cx = centerX - rect.left - rect.width/2;
+		const cy = centerY - rect.top - rect.height/2;
 
 		const imgCenterX = cx - x;
 		const imgCenterY = cy - y;
@@ -97,7 +91,6 @@
 		scale = newScale;
 
 		clampPosition();
-		event.preventDefault();
 	}
 
 	function clampPosition() {
@@ -136,6 +129,7 @@
 <div
 	bind:this={container}
 	class="viewport"
+	style="border: {borderPx}px solid #ccc;"
 	onpointerdown={startDrag}
 	onpointermove={onDrag}
 	onpointerup={endDrag}
@@ -164,7 +158,6 @@
 		aspect-ratio: 1 / 1;
 		overflow: hidden;
 		position: relative;
-		border: 2px solid #ccc;
 		touch-action: none;
 		margin-bottom: 0.5rem;
 		margin: auto;
