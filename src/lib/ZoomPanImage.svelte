@@ -7,9 +7,9 @@
 
 	let {
 		src = "",
-		x = 0,
-		y = 0,
-		scale = 1,
+		x = $bindable(0),
+		y = $bindable(0),
+		scale = $bindable(1),
 	}: {
 		src: string;
 		x: number;
@@ -50,8 +50,8 @@
 
 			const rect = container.getBoundingClientRect();
 			const [cx, cy] = [
-				pinchCenterX - rect.left,
-				pinchCenterY - rect.top,
+				pinchCenterX - rect.left - rect.width/2,
+				pinchCenterY - rect.top - rect.height/2,
 			];
 
 			const imgCenterX = cx - x;
