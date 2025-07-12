@@ -2,6 +2,9 @@
 	let container: HTMLDivElement;
 	let imgEl: HTMLImageElement;
 
+	const minScale = 1;
+	const maxScale = 8;
+
 	let {
 		src = "",
 		x = 0,
@@ -43,19 +46,21 @@
 	function onDrag(event: PointerEvent | TouchEvent) {
 		if (event instanceof TouchEvent && event.touches.length === 2) {
 			const newDist = getDistance(event.touches);
-			const newScale = startScale * (newDist / startDist);
-			const clamped = Math.min(Math.max(0.5, newScale), 4);
+			const newScale = clampNumber(startScale * (newDist / startDist), minScale, maxScale);
 
 			const rect = container.getBoundingClientRect();
-			const offsetX =
-				pinchCenterX - rect.left - container.clientWidth / 2;
-			const offsetY =
-				pinchCenterY - rect.top - container.clientHeight / 2;
+			const [cx, cy] = [
+				pinchCenterX - rect.left,
+				pinchCenterY - rect.top,
+			];
 
-			const deltaScale = clamped - scale;
-			x -= offsetX * (deltaScale / scale);
-			y -= offsetY * (deltaScale / scale);
-			scale = clamped;
+			const imgCenterX = cx - x;
+			const imgCenterY = cy - y;
+
+			const scaleRatio = newScale / scale;
+			x -= imgCenterX * (scaleRatio - 1);
+			y -= imgCenterY * (scaleRatio - 1);
+			scale = newScale;
 
 			clampPosition();
 			return;
@@ -73,17 +78,23 @@
 		isDragging = false;
 		isPinching = false;
 	}
+
 	function onWheel(event: WheelEvent) {
 		const oldScale = scale;
-		scale += event.deltaY * -0.001;
-		scale = Math.min(Math.max(0.5, scale), 4);
+		let newScale = scale + event.deltaY * -0.001;
+		newScale = clampNumber(newScale, minScale, maxScale);
 
 		const rect = container.getBoundingClientRect();
-		const offsetX = event.clientX - rect.left - container.clientWidth / 2;
-		const offsetY = event.clientY - rect.top - container.clientHeight / 2;
+		const cx = event.clientX - rect.left - rect.width/2;
+		const cy = event.clientY - rect.top - rect.height/2;
 
-		x -= (offsetX * (scale - oldScale)) / oldScale;
-		y -= (offsetY * (scale - oldScale)) / oldScale;
+		const imgCenterX = cx - x;
+		const imgCenterY = cy - y;
+
+		const scaleRatio = newScale / oldScale;
+		x -= imgCenterX * (scaleRatio - 1);
+		y -= imgCenterY * (scaleRatio - 1);
+		scale = newScale;
 
 		clampPosition();
 		event.preventDefault();
@@ -92,17 +103,17 @@
 	function clampPosition() {
 		if (!imgEl || !container) return;
 
-		const imgWidth = imgEl.naturalWidth * scale;
-		const imgHeight = imgEl.naturalHeight * scale;
-
 		const viewWidth = container.clientWidth;
 		const viewHeight = container.clientHeight;
 
-		const maxX = Math.max(0, (imgWidth - viewWidth) / 2);
-		const maxY = Math.max(0, (imgHeight - viewHeight) / 2);
+		const minX = viewWidth*(1-scale)/2;
+		const minY = viewHeight*(1-scale)/2;
 
-		x = Math.min(Math.max(x, -maxX), maxX);
-		y = Math.min(Math.max(y, -maxY), maxY);
+		const maxX = -minX;
+		const maxY = -minY;
+
+		x = clampNumber(x, minX, maxX);
+		y = clampNumber(y, minY, maxY);
 	}
 
 	function getDistance(touches: TouchList): number {
@@ -115,6 +126,10 @@
 		const x = (touches[0].clientX + touches[1].clientX) / 2;
 		const y = (touches[0].clientY + touches[1].clientY) / 2;
 		return [x, y];
+	}
+
+	function clampNumber(n: number, min: number, max: number) {
+		return Math.min(Math.max(n, min), max);
 	}
 </script>
 
@@ -142,26 +157,17 @@
 	/>
 </div>
 
-<div class="controls">
-	Zoom: <input
-		type="range"
-		min="0.5"
-		max="4"
-		step="0.01"
-		bind:value={scale}
-	/>
-</div>
-
 <style>
 	.viewport {
 		width: 100%;
-		max-width: 600px;
-		height: 400px;
+		max-width: 800px;
+		aspect-ratio: 1 / 1;
 		overflow: hidden;
 		position: relative;
 		border: 2px solid #ccc;
 		touch-action: none;
 		margin-bottom: 0.5rem;
+		margin: auto;
 	}
 
 	img {
@@ -171,9 +177,5 @@
 		top: 0;
 		left: 0;
 		will-change: transform;
-	}
-
-	.controls {
-		text-align: center;
 	}
 </style>

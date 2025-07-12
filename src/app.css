@@ -1,0 +1,24 @@
+@font-face {
+	font-family: "fire_emblem";
+	src: url("/Fire_Emblem_Heroes_Font.woff2");
+	font-display: swap;
+}
+
+:root {
+	font-family: "fire_emblem", sans-serif;
+
+	color: black;
+	-webkit-text-stroke-color: white;
+	-webkit-text-stroke-width: 2.5px;
+	font-weight: 700;
+	paint-order: stroke fill;
+
+	color-scheme: light dark;
+	background-color: #f1f5dd;
+	background-size: cover;
+
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}

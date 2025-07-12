@@ -2,6 +2,7 @@
   import type { Component } from 'svelte';
   import TokenForm from './lib/TokenForm.svelte'
   import Locator from './lib/Locator.svelte';
+    import Background from './lib/Background.svelte';
 
   let hash = $state(getHash());
 
@@ -31,15 +32,22 @@
 </script>
 
 <main class="container-fluid">
+  <Background/>
   <nav>
     <ul>
-      <li><strong>Nina admin</strong></li>
+      <li>Fire emblem heroes drive</li>
     </ul>
     <ul>
-      <li><a href="#/" onclick={() => navigate('/')} class="contrast">Weighins</a></li>
-      <li><a href="#/token" onclick={() => navigate('/token')} class="secondary">Token</a></li>
+      <li><a href="#/" onclick={() => navigate('/')} class="contrast">Image</a></li>
     </ul>
   </nav>
 
   <ComponentToDisplay />
 </main>
+
+<style>
+  li, a {
+    color: black;
+    -webkit-text-stroke-width: 4px;
+  }
+</style>
