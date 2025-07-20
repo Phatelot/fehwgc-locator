@@ -1,13 +1,18 @@
 <script lang="ts">
   import type { Component } from 'svelte';
-  import TokenForm from './lib/TokenForm.svelte'
+  import Admin from './lib/Admin.svelte'
   import Locator from './lib/Locator.svelte';
   import Background from './lib/Background.svelte';
+  import { getGithubToken } from './lib/github';
 
   let hash = $state(getHash());
 
   function getHash() : string {
     return location.hash.slice(1) || '/';
+  }
+
+  function showAdmin() : boolean {
+    return !!getGithubToken();
   }
 
   // Listen to hash changes
@@ -23,7 +28,7 @@
   // Route table
   const routes: {[hash: string]: Component} = {
     '/': Locator,
-    '/token': TokenForm,
+    '/admin': Admin,
   };
 
   // Pick the component based on the current hash
@@ -39,6 +44,9 @@
     </ul>
     <ul>
       <li><a href="#/" onclick={() => navigate('/')} class="contrast">Image</a></li>
+      {#if showAdmin()}
+        <li><a href="#/admin" onclick={() => navigate('/admin')} class="contrast">Admin</a></li>
+      {/if}
     </ul>
   </nav>
 
