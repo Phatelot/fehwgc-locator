@@ -19,6 +19,19 @@
 		scale: number;
 	} = $props();
 
+	let innerScale = $derived(convertToInnerScale(scale)); // inverse of the linear proportion of the picture currently shown (eg if = 2, then we're showing a fourth of the image area)
+	function updateOuterScale(newInnerScale: number) {
+		scale = convertToOuterScale(newInnerScale)
+	}
+	let innerX = $derived(convertToInnerX(x)); // how many pixels the image is translated horizontally, *after* scaling (when = 0, the viewport is horizontally centered on the image)
+	function updateOuterX(newInnerX: number) {
+		x = convertToOuterX(newInnerX)
+	}
+	let innerY = $derived(convertToInnerY(y)); // inverse of the linear proportion of the picture currently shown (eg if = 2, then we're showing a fourth of the image area)
+	function updateOuterY(newInnerY: number) {
+		y = convertToOuterY(newInnerY)
+	}
+
 	let isDragging: boolean = $state(false);
 	let isPinching: boolean = $state(false);
 	let startX: number = $state(0);
@@ -27,21 +40,62 @@
 	let startScale: number = $state(1);
 	let pinchCenterX: number = $state(0);
 	let pinchCenterY: number = $state(0);
+	let lastWheelEventTime: number = $state(Date.now() - 1000);
+
+	function convertToOuterScale(innerScale: number): number {
+		if (!imgEl || !container) return innerScale;
+		return innerScale / (imgEl.naturalWidth / container.getBoundingClientRect().width)
+	}
+
+	function convertToInnerScale(outerScale: number): number {
+		if (!imgEl || !container) return outerScale;
+		return outerScale * (imgEl.naturalWidth / container.getBoundingClientRect().width)
+	}
+
+	function convertToOuterX(innerX: number): number {
+		if (!imgEl || !container) return 0;
+		if (innerScale === 1) return 50;
+		return innerX / (container.clientWidth) * (1/innerScale - 1) / (innerScale - 1) * 100 + 50;
+	}
+
+	function convertToInnerX(outerX: number): number {
+		if (!imgEl || !container) return 0;
+		if (innerScale === 1) return 0;
+		return (outerX - 50) * (container.clientWidth) / (1/innerScale - 1) * (innerScale - 1) / 100
+	}
+
+	function convertToOuterY(innerY: number): number {
+		if (!imgEl || !container) return 0;
+		if (innerScale === 1) return 50;
+		return innerY / (container.clientHeight) * (1/innerScale - 1) / (innerScale - 1) * 100 + 50;
+	}
+
+	function convertToInnerY(outerY: number): number {
+		if (!imgEl || !container) return 0;
+		if (innerScale === 1) return 0;
+		return (outerY - 50) * (container.clientHeight) / (1/innerScale - 1) * (innerScale - 1) / 100
+	}
+
+	function reset() {
+		x = 50
+		y = 50
+		scale = 1
+	}
 
 	function startDrag(event: PointerEvent | TouchEvent) {
 		if (event instanceof TouchEvent && event.touches.length === 2) {
 			isDragging = false;
 			isPinching = true;
 			startDist = getDistance(event.touches);
-			startScale = scale;
+			startScale = innerScale;
 			[pinchCenterX, pinchCenterY] = getCenter(event.touches);
 			return;
 		}
 
 		isDragging = true;
 		const e = (event instanceof TouchEvent ? event.touches[0] : event)!;
-		startX = e.clientX - x;
-		startY = e.clientY - y;
+		startX = e.clientX - innerX;
+		startY = e.clientY - innerY;
 		event.preventDefault();
 	}
 
@@ -56,8 +110,8 @@
 
 		if (!isDragging) return;
 		const e = (event instanceof TouchEvent ? event.touches[0] : event)!;
-		x = e.clientX - startX;
-		y = e.clientY - startY;
+		updateOuterX(e.clientX - startX);
+		updateOuterY(e.clientY - startY);
 		clampPosition();
 		event.preventDefault();
 	}
@@ -68,44 +122,47 @@
 	}
 
 	function onWheel(event: WheelEvent) {
-		let newScale = scale + event.deltaY * -0.001;
+		const now = Date.now();
+		let newScale = innerScale + event.deltaY * -0.001;
+
 		changeScale(newScale, event.clientX, event.clientY);
 		event.preventDefault();
 	}
 
 	function changeScale(newScale: number, centerX: number, centerY: number) {
-		const oldScale = scale;
+		const oldScale = innerScale;
 
 		const rect = container.getBoundingClientRect();
-		maxScale = imgEl.naturalWidth / container.getBoundingClientRect().width * 2
+		maxScale = imgEl.naturalWidth / rect.width * 2
 		newScale = clampNumber(newScale, minScale, maxScale);
-		const cx = centerX - rect.left - rect.width/2;
-		const cy = centerY - rect.top - rect.height/2;
-
-		const imgCenterX = cx - x;
-		const imgCenterY = cy - y;
-
 		const scaleRatio = newScale / oldScale;
-		x -= imgCenterX * (scaleRatio - 1);
-		y -= imgCenterY * (scaleRatio - 1);
-		scale = newScale;
+
+		const offsetX = centerX - rect.left - rect.width/2;
+		const offsetY = centerY - rect.top - rect.height/2;
+
+		// Convert current outer x/y to inner (px)
+		const oldInnerX = convertToInnerX(x);
+		const oldInnerY = convertToInnerY(y);
+
+		// Adjust by scale
+		const newInnerX = oldInnerX - offsetX * (scaleRatio - 1);
+		const newInnerY = oldInnerY - offsetY * (scaleRatio - 1);
+
+		updateOuterX(newInnerX);
+		updateOuterY(newInnerY);
+		updateOuterScale(newScale);
 
 		clampPosition();
 	}
 
 	function clampPosition() {
 		if (!imgEl || !container) return;
-
-		const viewWidth = container.clientWidth;
-		const viewHeight = container.clientHeight;
-
-		const minX = viewWidth*(1-scale)/2;
-		const minY = viewHeight*(1-scale)/2;
-
-		const maxX = -minX;
-		const maxY = -minY;
-
+		const minX = 1 / 2 / innerScale * 100;
+		const maxX = 100 - minX;
 		x = clampNumber(x, minX, maxX);
+
+		const minY = 1 / 2 / innerScale * 100;
+		const maxY = 100 - minY;
 		y = clampNumber(y, minY, maxY);
 	}
 
@@ -146,8 +203,8 @@
 		{src}
 		alt="Zoomable view"
 		draggable="false"
-		onload={clampPosition}
-		style="transform: translate({x}px, {y}px) scale({scale});"
+		onload={() => {clampPosition(); reset();}}
+		style="transform: translate({innerX}px, {innerY}px) scale({innerScale});"
 	/>
 </div>
 

@@ -2,7 +2,7 @@
   import type { Component } from 'svelte';
   import TokenForm from './lib/TokenForm.svelte'
   import Locator from './lib/Locator.svelte';
-    import Background from './lib/Background.svelte';
+  import Background from './lib/Background.svelte';
 
   let hash = $state(getHash());
 

@@ -6,7 +6,6 @@ import (
 	"image/draw"
 	"image/jpeg"
 	"os"
-	"strconv"
 
 	"github.com/chai2010/webp"
 )
@@ -31,18 +30,7 @@ func main() {
 
 	rgbaImg := toRGBA(img)
 
-	const numberOfTilesPerSide = 1
-
-	dx := img.Bounds().Dx() / numberOfTilesPerSide
-	dy := img.Bounds().Dy() / numberOfTilesPerSide
-
-	for i := range numberOfTilesPerSide {
-		for j := range numberOfTilesPerSide {
-			outputPath := "output/" + strconv.Itoa(i) + "_" + strconv.Itoa(j) + ".webp"
-			cropped := cropImage(rgbaImg, image.Rect(dx*i, dy*j, dx*(i+1), dy*(j+1)))
-			writeWebpImage(outputPath, cropped)
-		}
-	}
+	writeWebpImage("public/images/spread.webp", rgbaImg)
 }
 
 // toRGBA converts any image.Image to *image.RGBA
@@ -51,12 +39,6 @@ func toRGBA(src image.Image) *image.RGBA {
 	dst := image.NewRGBA(bounds)
 	draw.Draw(dst, bounds, src, bounds.Min, draw.Src)
 	return dst
-}
-
-// cropImage crops an image to the given rectangle.
-func cropImage(src *image.RGBA, crop image.Rectangle) image.Image {
-	crop = crop.Intersect(src.Bounds())
-	return src.SubImage(crop)
 }
 
 func writeWebpImage(outputPath string, img image.Image) {
