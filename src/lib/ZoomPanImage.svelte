@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { formatCoordinate, formatScale } from "./format_utils";
-
 	let container: HTMLDivElement;
 	let imgEl: HTMLImageElement;
 
@@ -21,15 +19,11 @@
 		scale: number;
 	} = $props();
 
-	let innerScale = $derived(convertToInnerScale(scale)); // inverse of the linear proportion of the picture currently shown (eg if = 2, then we're showing a fourth of the image area)
-	function updateOuterScale(newInnerScale: number) {
-		scale = convertToOuterScale(newInnerScale)
-	}
-	let innerX = $derived(convertToInnerX(x)); // how many pixels the image is translated horizontally, *after* scaling (when = 0, the viewport is horizontally centered on the image)
+	let innerX = $derived(convertToInnerX(x));
 	function updateOuterX(newInnerX: number) {
 		x = convertToOuterX(newInnerX)
 	}
-	let innerY = $derived(convertToInnerY(y)); // how many pixels the image is translated vertically, *after* scaling (when = 0, the viewport is vertically centered on the image)
+	let innerY = $derived(convertToInnerY(y));
 	function updateOuterY(newInnerY: number) {
 		y = convertToOuterY(newInnerY)
 	}
@@ -39,48 +33,38 @@
 	let startX: number = $state(0);
 	let startY: number = $state(0);
 	let startDist: number = $state(0);
-	let startScale: number = $state(1);
+	let startscale: number = $state(1);
 	let pinchCenterX: number = $state(0);
 	let pinchCenterY: number = $state(0);
 
-	function convertToOuterScale(innerScale: number): number {
-		if (!imgEl || !container) return innerScale;
-		return innerScale / (imgEl.naturalWidth / container.getBoundingClientRect().width)
-	}
-
-	function convertToInnerScale(outerScale: number): number {
-		if (!imgEl || !container) return outerScale;
-		return outerScale * (imgEl.naturalWidth / container.getBoundingClientRect().width)
-	}
-
 	function convertToOuterX(innerX: number): number {
 		if (!imgEl || !container) return 0;
-		if (innerScale === 1) return 50;
-		return innerX / (container.clientWidth) * (1/innerScale - 1) / (innerScale - 1) * 100 + 50;
+		if (scale === 1) return 50;
+		return innerX / container.clientWidth * (1 / scale - 1) / (scale - 1) * 100 + 50;
 	}
 
 	function convertToInnerX(outerX: number): number {
 		if (!imgEl || !container) return 0;
-		if (innerScale === 1) return 0;
-		return (outerX - 50) * (container.clientWidth) / (1/innerScale - 1) * (innerScale - 1) / 100
+		if (scale === 1) return 0;
+		return (outerX - 50) * container.clientWidth / (1 / scale - 1) * (scale - 1) / 100;
 	}
 
 	function convertToOuterY(innerY: number): number {
 		if (!imgEl || !container) return 0;
-		if (innerScale === 1) return 50;
-		return innerY / (container.clientHeight) * (1/innerScale - 1) / (innerScale - 1) * 100 + 50;
+		if (scale === 1) return 50;
+		return innerY / container.clientHeight * (1 / scale - 1) / (scale - 1) * 100 + 50;
 	}
 
 	function convertToInnerY(outerY: number): number {
 		if (!imgEl || !container) return 0;
-		if (innerScale === 1) return 0;
-		return (outerY - 50) * (container.clientHeight) / (1/innerScale - 1) * (innerScale - 1) / 100
+		if (scale === 1) return 0;
+		return (outerY - 50) * container.clientHeight / (1 / scale - 1) * (scale - 1) / 100;
 	}
 
 	function reset() {
-		x = 50
-		y = 50
-		scale = 1
+		x = 50;
+		y = 50;
+		scale = 1;
 	}
 
 	function startDrag(event: PointerEvent | TouchEvent) {
@@ -88,7 +72,7 @@
 			isDragging = false;
 			isPinching = true;
 			startDist = getDistance(event.touches);
-			startScale = innerScale;
+			startscale = scale;
 			[pinchCenterX, pinchCenterY] = getCenter(event.touches);
 			return;
 		}
@@ -103,7 +87,7 @@
 	function onDrag(event: PointerEvent | TouchEvent) {
 		if (event instanceof TouchEvent && event.touches.length === 2) {
 			const newDist = getDistance(event.touches);
-			changeScale(startScale * (newDist / startDist), pinchCenterX, pinchCenterY);
+			changescale(startscale * (newDist / startDist), pinchCenterX, pinchCenterY);
 			clampPosition();
 			event.preventDefault();
 			return;
@@ -123,46 +107,42 @@
 	}
 
 	function onWheel(event: WheelEvent) {
-		const now = Date.now();
-		let newScale = innerScale + event.deltaY * -0.001;
-
-		changeScale(newScale, event.clientX, event.clientY);
+		const newScale = scale + event.deltaY * -0.001;
+		changescale(newScale, event.clientX, event.clientY);
 		event.preventDefault();
 	}
 
-	function changeScale(newScale: number, centerX: number, centerY: number) {
-		const oldScale = innerScale;
+	function changescale(newScale: number, centerX: number, centerY: number) {
+		const oldScale = scale;
 
 		const rect = container.getBoundingClientRect();
-		maxScale = imgEl.naturalWidth / rect.width * 2
-		newScale = clampNumber(newScale, minScale, maxScale);
-		const scaleRatio = newScale / oldScale;
+		maxScale = imgEl.naturalWidth / rect.width * 2;
+		const clampedScale = clampNumber(newScale, minScale, maxScale);
+		const scaleRatio = clampedScale / oldScale;
 
-		const offsetX = centerX - rect.left - rect.width/2;
-		const offsetY = centerY - rect.top - rect.height/2;
+		const offsetX = centerX - rect.left - rect.width / 2;
+		const offsetY = centerY - rect.top - rect.height / 2;
 
-		// Convert current outer x/y to inner (px)
 		const oldInnerX = convertToInnerX(x);
 		const oldInnerY = convertToInnerY(y);
 
-		// Adjust by scale
 		const newInnerX = oldInnerX - offsetX * (scaleRatio - 1);
 		const newInnerY = oldInnerY - offsetY * (scaleRatio - 1);
 
 		updateOuterX(newInnerX);
 		updateOuterY(newInnerY);
-		updateOuterScale(newScale);
+		scale = clampedScale;
 
 		clampPosition();
 	}
 
 	function clampPosition() {
 		if (!imgEl || !container) return;
-		const minX = 1 / 2 / innerScale * 100;
+		const minX = 1 / 2 / scale * 100;
 		const maxX = 100 - minX;
 		x = clampNumber(x, minX, maxX);
 
-		const minY = 1 / 2 / innerScale * 100;
+		const minY = 1 / 2 / scale * 100;
 		const maxY = 100 - minY;
 		y = clampNumber(y, minY, maxY);
 	}
@@ -205,13 +185,9 @@
 		alt="Zoomable view"
 		draggable="false"
 		onload={() => {clampPosition(); reset();}}
-		style="transform: translate({innerX}px, {innerY}px) scale({innerScale});"
+		style="transform: translate({innerX}px, {innerY}px) scale({scale});"
 	/>
 </div>
-
-<p>innerScale: {formatScale(1/innerScale)}</p>
-<p>x: {formatCoordinate(x)}</p>
-<p>y: {formatCoordinate(y)}</p>
 
 <style>
 	.viewport {
