@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { formatCoordinate, formatScale } from "./format_utils";
+
 	let container: HTMLDivElement;
 	let imgEl: HTMLImageElement;
 
@@ -27,7 +29,7 @@
 	function updateOuterX(newInnerX: number) {
 		x = convertToOuterX(newInnerX)
 	}
-	let innerY = $derived(convertToInnerY(y)); // inverse of the linear proportion of the picture currently shown (eg if = 2, then we're showing a fourth of the image area)
+	let innerY = $derived(convertToInnerY(y)); // how many pixels the image is translated vertically, *after* scaling (when = 0, the viewport is vertically centered on the image)
 	function updateOuterY(newInnerY: number) {
 		y = convertToOuterY(newInnerY)
 	}
@@ -40,7 +42,6 @@
 	let startScale: number = $state(1);
 	let pinchCenterX: number = $state(0);
 	let pinchCenterY: number = $state(0);
-	let lastWheelEventTime: number = $state(Date.now() - 1000);
 
 	function convertToOuterScale(innerScale: number): number {
 		if (!imgEl || !container) return innerScale;
@@ -207,6 +208,10 @@
 		style="transform: translate({innerX}px, {innerY}px) scale({innerScale});"
 	/>
 </div>
+
+<p>innerScale: {formatScale(1/innerScale)}</p>
+<p>x: {formatCoordinate(x)}</p>
+<p>y: {formatCoordinate(y)}</p>
 
 <style>
 	.viewport {
