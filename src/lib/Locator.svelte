@@ -1,18 +1,25 @@
 <script lang="ts">
+    import { onMount, tick } from "svelte";
     import { getPublicImageLink } from "./asset_utils";
     import CharacterSelector from "./CharacterSelector.svelte";
     import { formatCoordinate, formatScale } from "./format_utils";
     import { positionsByCharacterSlug } from "./positions";
     import ZoomPanImage from "./ZoomPanImage.svelte";
 
+    let {
+		selectedCharacterSlug = $bindable('edelgard_broken')
+	}:
+	{
+		selectedCharacterSlug?: string | null
+	} = $props();
+
     let scale: number = $state(1);
     let x: number = $state(0);
     let y: number = $state(0);
 
-    let selectedCharacter: string | null = $state('edelgard_broken')
 
     function goToSelectedCharacter() {
-        const position = positionsByCharacterSlug[selectedCharacter || ''] || {
+        const position = positionsByCharacterSlug[selectedCharacterSlug || ''] || {
             scale: 1,
             x: 0,
             y: 0,
@@ -22,6 +29,10 @@
         scale = position.scale
         x = position.x
         y = position.y
+    }
+
+    function disabledGoToSelectedCharacter() {
+        return !(!!selectedCharacterSlug && !!positionsByCharacterSlug[selectedCharacterSlug]);
     }
 
     function copyCoordinates() {
@@ -36,17 +47,26 @@
 				});
 		}
 	}
+
+    onMount(async () => {
+        if (selectedCharacterSlug && positionsByCharacterSlug[selectedCharacterSlug]) {
+            await tick();
+            goToSelectedCharacter();
+        }
+    });
+
+
 </script>
 
 <div class="container">
 
     <div class="options">
-        <CharacterSelector bind:selectedCharacterSlug={selectedCharacter} />
-        <button onclick="{() => goToSelectedCharacter()}">Go to selected character</button>
+        <CharacterSelector bind:selectedCharacterSlug={selectedCharacterSlug} />
+        <button onclick="{() => goToSelectedCharacter()}" disabled={disabledGoToSelectedCharacter()}>Go to selected character</button>
 
         <br/>
         <p id="coordinates-p">
-            {selectedCharacter} {formatScale(scale)} {formatCoordinate(x)} {formatCoordinate(y)}
+            {selectedCharacterSlug} {formatScale(scale)} {formatCoordinate(x)} {formatCoordinate(y)}
         </p>
         <button onclick="{() => copyCoordinates()}">Copy coordinates</button>
 

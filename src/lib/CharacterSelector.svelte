@@ -23,12 +23,26 @@
 				value: `${character.nameSlug}_broken`
 			})
 			return outfits;
-		})
+		}).sort((a, b) => a.text > b.text ? 1 : -1)
+
+
+	function updateCsParam(newSlug: string) {
+		const hash = location.hash.slice(1) || '/';
+		const [path, queryString] = hash.split('?');
+		const searchParams = new URLSearchParams(queryString || '');
+
+		searchParams.set('cs', newSlug);
+
+		// Replace the hash silently without triggering 'hashchange'
+		// by using history.replaceState
+		const newHash = path + '?' + searchParams.toString();
+		history.replaceState(null, '', '#' + newHash);
+	}
 
 </script>
 
 <form>
-    <select bind:value={selectedCharacterSlug} style="font-weight: 600;">
+    <select bind:value={selectedCharacterSlug} style="font-weight: 600;" onchange={(e) => updateCsParam(e.currentTarget.value)}>
       {#each choices as choice}
         <option style="font-weight: 600;" value={choice.value}>
          {choice.text}

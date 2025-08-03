@@ -184,7 +184,7 @@
 		{src}
 		alt="Zoomable view"
 		draggable="false"
-		onload={() => {clampPosition(); reset();}}
+		onload={() => {clampPosition();}}
 		style="transform: translate({innerX}px, {innerY}px) scale({scale});"
 	/>
 </div>
