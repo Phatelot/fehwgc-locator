@@ -5,6 +5,7 @@
     import { formatCoordinate, formatScale } from "./format_utils";
     import { getRandomLocatedOutfitSlug, positionsByCharacterSlug } from "./positions";
     import ZoomPanImage from "./ZoomPanImage.svelte";
+    import ViewportIndicator from "./ViewportIndicator.svelte";
 
     let {
 		selectedCharacterSlug = $bindable('edelgard_broken')
@@ -77,6 +78,8 @@
         <br/>
 
         <button onclick="{() => goToRandomCharacter()}">Go to random character</button>
+
+        <ViewportIndicator {x} {y} {scale} src={getPublicImageLink("spread.webp")}/>
 
         {#if false}
             <p id="coordinates-p">
