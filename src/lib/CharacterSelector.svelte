@@ -17,11 +17,11 @@
 		.flatMap(character => {
 			const outfits = character.outfits.map(outfit => ({
 				text: `${character.name} - ${outfit.outfit.toLowerCase()}`,
-				value: `${character.nameSlug}_${outfit.outfitSlug}`
+				value: `${character.nameSlug}_${outfit.outfitSlug}`,
 			}))
 			outfits.push({
 				text: `${character.name} - broken`,
-				value: `${character.nameSlug}_broken`
+				value: `${character.nameSlug}_broken`,
 			})
 			return outfits;
 		})

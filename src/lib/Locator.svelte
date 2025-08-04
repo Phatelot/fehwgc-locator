@@ -6,6 +6,7 @@
     import { getRandomLocatedOutfitSlug, positionsByCharacterSlug } from "./positions";
     import ZoomPanImage from "./ZoomPanImage.svelte";
     import ViewportIndicator from "./ViewportIndicator.svelte";
+    import { getSlugsFromCombinedSlug } from "./metadata_utils";
 
     let {
 		selectedCharacterSlug = $bindable('edelgard_broken')
@@ -34,6 +35,28 @@
         scale = position.scale
         x = position.x
         y = position.y
+    }
+
+    function goToOutfitPopup() {
+        if (!selectedCharacterSlug) {
+            return;
+        }
+        const slug = getSlugsFromCombinedSlug(selectedCharacterSlug)
+
+        const state = retrieveStateFromLocalStorage();
+        state.page = "OUTFIT_CHART";
+        state.selectedCharacterSlug = slug?.characterSlug;
+        state.selectedOutfitSlug = slug?.outfitSlug;
+        localStorage.setItem("fehwgc", JSON.stringify(state));
+        window.location.href = 'https://phatelot.github.io/fehwgc';
+    }
+
+    function retrieveStateFromLocalStorage(): any {
+      const retrieved = localStorage.getItem("fehwgc");
+      if (!retrieved) {
+        return {}
+      }
+      return JSON.parse(retrieved);
     }
 
     function copyCoordinates() {
@@ -77,6 +100,7 @@
 
         <br/>
 
+        <button onclick="{() => goToOutfitPopup()}">Read her detailed info</button>
         <button onclick="{() => goToRandomCharacter()}">Go to random character</button>
 
         <ViewportIndicator {x} {y} {scale} src={getPublicImageLink("spread.webp")}/>
@@ -104,7 +128,7 @@
         display: flex;
     }
 
-    @media (max-width: 640px) {
+    @media (max-width: 1080px) {
         .container {
             flex-direction: column;
         }
@@ -112,6 +136,7 @@
 
     .options {
         padding: 30px 30px 30px 0;
+        max-width: 500px;
     }
 
     .zoompanimage {
