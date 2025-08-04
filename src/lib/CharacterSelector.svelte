@@ -1,5 +1,6 @@
 <script lang="ts">
     import { baseMetadata } from "./metadata";
+    import { positionsByCharacterSlug } from "./positions";
 
 	let {
 		selectedCharacterSlug = $bindable('edelgard_broken')
@@ -23,7 +24,9 @@
 				value: `${character.nameSlug}_broken`
 			})
 			return outfits;
-		}).sort((a, b) => a.text > b.text ? 1 : -1)
+		})
+		.filter(outfit => Object.hasOwn(positionsByCharacterSlug, outfit.value))
+		.sort((a, b) => a.text > b.text ? 1 : -1)
 
 
 	function updateCsParam(newSlug: string) {

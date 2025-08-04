@@ -3,7 +3,7 @@
     import { getPublicImageLink } from "./asset_utils";
     import CharacterSelector from "./CharacterSelector.svelte";
     import { formatCoordinate, formatScale } from "./format_utils";
-    import { positionsByCharacterSlug } from "./positions";
+    import { getRandomLocatedOutfitSlug, positionsByCharacterSlug } from "./positions";
     import ZoomPanImage from "./ZoomPanImage.svelte";
 
     let {
@@ -17,6 +17,10 @@
     let x: number = $state(0);
     let y: number = $state(0);
 
+    function goToRandomCharacter() {
+        selectedCharacterSlug = getRandomLocatedOutfitSlug()
+        goToSelectedCharacter()
+    }
 
     function goToSelectedCharacter() {
         const position = positionsByCharacterSlug[selectedCharacterSlug || ''] || {
@@ -29,10 +33,6 @@
         scale = position.scale
         x = position.x
         y = position.y
-    }
-
-    function disabledGoToSelectedCharacter() {
-        return !(!!selectedCharacterSlug && !!positionsByCharacterSlug[selectedCharacterSlug]);
     }
 
     function copyCoordinates() {
@@ -49,10 +49,15 @@
 	}
 
     onMount(async () => {
-        if (selectedCharacterSlug && positionsByCharacterSlug[selectedCharacterSlug]) {
-            await tick();
-            goToSelectedCharacter();
+        if (!selectedCharacterSlug) {
+            return;
         }
+        if (!positionsByCharacterSlug[selectedCharacterSlug]) {
+            selectedCharacterSlug = '';
+            return;
+        }
+        await tick();
+        goToSelectedCharacter();
     });
 
 
@@ -61,15 +66,24 @@
 <div class="container">
 
     <div class="options">
-        <CharacterSelector bind:selectedCharacterSlug={selectedCharacterSlug} />
-        <button onclick="{() => goToSelectedCharacter()}" disabled={disabledGoToSelectedCharacter()}>Go to selected character</button>
+        <CharacterSelector bind:selectedCharacterSlug={
+            () => selectedCharacterSlug,
+            (scs) => {
+                selectedCharacterSlug = scs;
+                goToSelectedCharacter();
+            }}
+        />
 
         <br/>
-        <p id="coordinates-p">
-            {selectedCharacterSlug} {formatScale(scale)} {formatCoordinate(x)} {formatCoordinate(y)}
-        </p>
-        <button onclick="{() => copyCoordinates()}">Copy coordinates</button>
 
+        <button onclick="{() => goToRandomCharacter()}">Go to random character</button>
+
+        {#if false}
+            <p id="coordinates-p">
+                {selectedCharacterSlug} {formatScale(scale)} {formatCoordinate(x)} {formatCoordinate(y)}
+            </p>
+            <button onclick="{() => copyCoordinates()}">Copy coordinates</button>
+        {/if}
     </div>
 
     <div class="zoompanimage">

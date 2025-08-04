@@ -531,3 +531,9 @@ export const positionsByCharacterSlug: {[key: string]: Position} = {
 	"reginn_new_year": {scale: 10.31, x: 88, y: 87},
 	"reginn_broken": {scale: 10.31, x: 90, y: 84},
 }
+
+const locatedOutfitSlugs = Object.keys(positionsByCharacterSlug);
+
+export function getRandomLocatedOutfitSlug(): string {
+	return locatedOutfitSlugs[Math.floor(Math.random() * locatedOutfitSlugs.length)];
+}
