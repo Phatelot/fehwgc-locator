@@ -69,4 +69,8 @@
     -webkit-text-stroke-width: 0px;
   }
 
+  select {
+	margin-bottom: 10px;
+  }
+
 </style>

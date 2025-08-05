@@ -7,6 +7,7 @@
     import ZoomPanImage from "./ZoomPanImage.svelte";
     import ViewportIndicator from "./ViewportIndicator.svelte";
     import { getSlugsFromCombinedSlug } from "./metadata_utils";
+    import Chibi from "./Chibi.svelte";
 
     let {
 		selectedCharacterSlug = $bindable('edelgard_broken')
@@ -98,12 +99,13 @@
             }}
         />
 
-        <br/>
-
         <button onclick="{() => goToOutfitPopup()}">Read her detailed info</button>
         <button onclick="{() => goToRandomCharacter()}">Go to random character</button>
 
-        <ViewportIndicator {x} {y} {scale} src={getPublicImageLink("spread.webp")}/>
+        <div class="smallimagescontainer">
+            <Chibi {selectedCharacterSlug}/>
+            <ViewportIndicator {x} {y} {scale} src={getPublicImageLink("spread.webp")}/>
+        </div>
 
         {#if false}
             <p id="coordinates-p">
@@ -124,6 +126,11 @@
         -webkit-text-stroke-width: 0px;
     }
 
+    button {
+        margin-bottom: 10px;
+        width: 100%;
+    }
+
     .container {
         display: flex;
     }
@@ -131,6 +138,11 @@
     @media (max-width: 1080px) {
         .container {
             flex-direction: column;
+            align-items: center;
+        }
+
+        .zoompanimage {
+            width: 100%;
         }
     }
 
@@ -141,5 +153,10 @@
 
     .zoompanimage {
         flex-grow: 1;
+    }
+
+    .smallimagescontainer {
+        display: flex;
+        justify-content: space-between;
     }
 </style>
