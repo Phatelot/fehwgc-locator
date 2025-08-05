@@ -135,20 +135,24 @@
         display: flex;
     }
 
+    .options {
+        padding: 30px 30px 30px 0;
+        max-width: 500px;
+    }
+
     @media (max-width: 1080px) {
         .container {
             flex-direction: column;
             align-items: center;
         }
 
+        .options {
+            padding-right: 0px;
+        }
+
         .zoompanimage {
             width: 100%;
         }
-    }
-
-    .options {
-        padding: 30px 30px 30px 0;
-        max-width: 500px;
     }
 
     .zoompanimage {
