@@ -514,8 +514,6 @@ export const positionsByCharacterSlug: {[key: string]: Position} = {
 	"hinoka_resplendent": {scale: 10.31, x: 67, y: 85},
 	"kagero_resplendent": {scale: 10.31, x: 68, y: 85},
 	"peony_base": {scale: 10.31, x: 72, y: 85},
-	"triandra_base": {scale: 10.31, x: 70, y: 88},
-	"freyja_base": {scale: 10.31, x: 73, y: 88},
 	"mirabilis_base": {scale: 10.31, x: 75, y: 85},
 	"nott_base": {scale: 10.31, x: 77, y: 88},
 	"thjazi_base": {scale: 10.31, x: 79, y: 87},
@@ -530,6 +528,19 @@ export const positionsByCharacterSlug: {[key: string]: Position} = {
 	"reginn_ascended": {scale: 10.31, x: 93, y: 90},
 	"reginn_new_year": {scale: 10.31, x: 88, y: 87},
 	"reginn_broken": {scale: 10.31, x: 90, y: 84},
+	"cherche_base": {scale: 11, x: 57, y: 59},
+	"julia_bride": {scale: 11, x: 52, y: 60},
+	"ishtar_bride": {scale: 11, x: 50, y: 61},
+	"larcei_bride": {scale:  11, x: 55, y: 63},
+	"juno_bride": {scale: 11, x: 52, y: 67},
+	"henriette_devoted": {scale: 11, x: 57, y: 72},
+	"thrasir_base": {scale: 11, x: 34, y: 9},
+	"gullveig_broken": {scale: 6.12, x: 21, y: 15},
+	"triandra_base": {scale: 14.59, x: 67, y: 89},
+	"freyja_base": {scale: 14.59, x: 69, y: 88},
+	"henriette_broken": {scale: 14.59, x: 73, y: 88},
+	"faye_base": {scale: 15.1, x: 39, y: 51},
+	"henriette_base": {scale: 15.1, x: 36, y: 48},
 }
 
 const locatedOutfitSlugs = Object.keys(positionsByCharacterSlug);
