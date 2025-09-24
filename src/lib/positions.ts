@@ -68,7 +68,7 @@ export const positionsByCharacterSlug: {[key: string]: Position} = {
 	"female_corrin_summer": {scale: 10.31, x: 74, y: 13},
 	"camilla_summer": {scale: 10.31, x: 72, y: 13},
 	"nel_base": {scale: 10.31, x: 67, y: 12},
-	"female_alear_broken": {scale: 8.66, x: 64, y: 15},
+	"female_alear_broken": {scale: 8.12, x: 64, y: 14},
 	"celine_broken": {scale: 9.92, x: 55, y: 16},
 	"citrinne_broken": {scale: 10.31, x: 51, y: 13},
 	"ishtar_broken": {scale: 10.31, x: 46, y: 15},
@@ -548,6 +548,16 @@ export const positionsByCharacterSlug: {[key: string]: Position} = {
 	"leanne_dancer": { scale: 15.1, x: 3, y: 14},
 	"idunn_base": { scale: 15.1, x: 31, y: 54},
 	"lissa_ascended": { scale: 15.1, x: 56, y: 90},
+	"altina_base": { scale: 12.14, x: 49, y: 4},
+	"altina_dancer": { scale: 12.14, x: 10, y: 17},
+	"altina_summer": { scale: 12.14, x: 65, y: 18},
+	"altina_broken": { scale: 11.82, x: 75, y: 4},
+	"ayra_legendary": { scale: 12.14, x: 42, y: 14},
+	"erika_armored": { scale: 12.14, x: 26, y: 61},
+	"erika_ascended": { scale: 12.14, x: 32, y: 40},
+	"erika_brave": { scale: 12.14, x: 35, y: 57},
+	"heiorun_summer": { scale: 16.39, x: 74, y: 9},
+	"eirika_spring": {scale: 16.39, x: 41, y: 30},
 }
 
 const locatedOutfitSlugs = Object.keys(positionsByCharacterSlug);
