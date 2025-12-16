@@ -3,7 +3,8 @@
 	let imgEl: HTMLImageElement;
 
 	const minScale = 1;
-	let maxScale = $state(2);
+	const maxScaleFactor = 3;
+	let maxScale = $state(maxScaleFactor);
 
 	const borderPx = 2;
 
@@ -116,7 +117,7 @@
 		const oldScale = scale;
 
 		const rect = container.getBoundingClientRect();
-		maxScale = imgEl.naturalWidth / rect.width * 2;
+		maxScale = imgEl.naturalWidth / rect.width * maxScaleFactor;
 		const clampedScale = clampNumber(newScale, minScale, maxScale);
 		const scaleRatio = clampedScale / oldScale;
 

@@ -109,7 +109,7 @@
 
         {#if false}
             <p id="coordinates-p">
-                {selectedCharacterSlug} {formatScale(scale)} {formatCoordinate(x)} {formatCoordinate(y)}
+                "{selectedCharacterSlug}": &lbrace;scale: {formatScale(scale)}, x: {formatCoordinate(x)}, y: {formatCoordinate(y)}&rbrace;,
             </p>
             <button onclick="{() => copyCoordinates()}">Copy coordinates</button>
         {/if}
