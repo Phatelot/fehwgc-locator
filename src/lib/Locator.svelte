@@ -26,6 +26,9 @@
     }
 
     function goToSelectedCharacter() {
+        if (!positionsByCharacterSlug[selectedCharacterSlug || '']) {
+            return
+        }
         const position = positionsByCharacterSlug[selectedCharacterSlug || ''] || {
             scale: 1,
             x: 0,
@@ -107,7 +110,7 @@
             <ViewportIndicator {x} {y} {scale} src={getPublicImageLink("spread.webp")}/>
         </div>
 
-        {#if false}
+        {#if true}
             <p id="coordinates-p">
                 "{selectedCharacterSlug}": &lbrace;scale: {formatScale(scale)}, x: {formatCoordinate(x)}, y: {formatCoordinate(y)}&rbrace;,
             </p>
