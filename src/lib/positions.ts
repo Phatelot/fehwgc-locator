@@ -285,7 +285,6 @@ export const positionsByCharacterSlug: {[key: string]: Position} = {
 	"maribelle_broken": {scale: 7.5, x: 79, y: 52},
 	"maribelle_base": {scale: 24, x: 79, y: 49},
 	"lucina_devoted": {scale: 24, x: 80, y: 49},
-	"athena_base": {scale: 24, x: 82, y: 49},
 	"kjelle_base": {scale: 23.42, x: 85, y: 44},
 	"lucina_base": {scale: 23.42, x: 85, y: 44},
 	"lucina_brave": {scale: 23.42, x: 88, y: 44},
@@ -619,6 +618,8 @@ export const positionsByCharacterSlug: {[key: string]: Position} = {
 	"chloe_base": {scale: 20.45, x: 26, y: 43},
 	"guinivere_broken": {scale: 20.45, x: 23, y: 43},
 	"orochi_base": {scale: 24, x: 21, y: 45},
+	"nephenee_base": {scale: 21.61, x: 34, y: 52},
+	"nephenee_resplendent": {scale: 22.2, x: 10, y: 19},
 }
 
 const locatedOutfitSlugs = Object.keys(positionsByCharacterSlug);
