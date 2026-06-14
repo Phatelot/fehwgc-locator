@@ -756,6 +756,7 @@ export const positionsByCharacterSlug: {[key: string]: Position} = {
 	"tanya_base": {scale: 21.61, x: 95.3, y: 81.9},
 	"tana_resplendent": {scale: 21.61, x: 92, y: 82.5},
 	"eyvel_broken": {scale: 23.76, x: 91.4, y: 79.8},
+	"hilda_holy_war_broken": {scale: 21.39, x: 54.9, y: 78.5},
 }
 
 const locatedOutfitSlugs = Object.keys(positionsByCharacterSlug);
