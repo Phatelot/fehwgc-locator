@@ -13,6 +13,7 @@ function afterResize(p: Position): Position {
 }
 
 export const positionsByCharacterSlug: {[key: string]: Position} = {
+	"edelgard_broken": {scale: 6.21, x: 79.7, y: 61.5},
 	"leila_rearmed": {scale: 23.45, x: 3.7, y: 7.8},
 	"hapi_broken": {scale: 16.43, x: 10.3, y: 8.7},
 	"silvia_broken": afterResize({scale: 23.51, x: 14, y: 4}),
@@ -598,7 +599,6 @@ export const positionsByCharacterSlug: {[key: string]: Position} = {
 	"female_robin_brave": afterResize({scale: 22.78, x: 67, y: 60}),
 	"heior_broken": afterResize({scale: 21.89, x: 68, y: 59}),
 	"arval_base": afterResize({scale: 24, x: 71, y: 59}),
-	"edelgard_broken": afterResize({scale: 5.25, x: 79, y: 66}),
 	"lysithea_base": afterResize({scale: 22.74, x: 79, y: 60}),
 	"marianne_armored": afterResize({scale: 22.74, x: 77, y: 59}),
 	"nuibaba_broken": afterResize({scale: 22.74, x: 74, y: 63}),
@@ -646,7 +646,7 @@ export const positionsByCharacterSlug: {[key: string]: Position} = {
 	"sharena_entwined": {scale: 27.44, x: 30.5, y: 83.3},
 	"sharena_broken": {scale: 15.83, x: 8, y: 80},
 	"fimbulvetr_base": {scale: 15.83, x: 13.4, y: 80.6},
-	"fimbulvetr_broken": {scale: 18.63, x: 24.6, y: 92},
+	"fimbulvetr_broken": {scale: 19.42, x: 27.5, y: 95.3},
 	"sharena_new_year": {scale: 24.21, x: 20.6, y: 35.7},
 	"julia_broken": {scale: 17.12, x: 22, y: 52.2},
 	"larcei_base": {scale: 27.86, x: 20.2, y: 50.3},
@@ -757,6 +757,10 @@ export const positionsByCharacterSlug: {[key: string]: Position} = {
 	"tana_resplendent": {scale: 21.61, x: 92, y: 82.5},
 	"eyvel_broken": {scale: 23.76, x: 91.4, y: 79.8},
 	"hilda_holy_war_broken": {scale: 21.39, x: 54.9, y: 78.5},
+	"laegjarn_resplendent": {scale: 26.4, x: 29, y: 82.3},
+	"laegjarn_chosen": {scale: 23.63, x: 45.3, y: 82.8},
+	"laegjarn_broken": {scale: 22.6, x: 32.5, y: 95.4},
+	"female_robin_broken": {scale: 6.98, x: 84.5, y: 70.3},
 }
 
 const locatedOutfitSlugs = Object.keys(positionsByCharacterSlug);
