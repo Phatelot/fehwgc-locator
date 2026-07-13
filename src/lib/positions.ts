@@ -769,6 +769,7 @@ export const positionsByCharacterSlug: {[key: string]: Position} = {
 	"shez_base": {scale: 23.03, x: 61.8, y: 56.7},
 	"eirika_broken": {scale: 21.23, x: 7.4, y: 86.8},
 	"marianne_dancer": {scale: 23.63, x: 10.4, y: 12.2},
+	"bernadetta_brave": {scale: 23.63, x: 16.8, y: 5.9},
 }
 
 const locatedOutfitSlugs = Object.keys(positionsByCharacterSlug);
