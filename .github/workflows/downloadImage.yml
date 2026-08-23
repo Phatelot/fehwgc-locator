@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.head_ref }}
-          token: ${{ secrets.PAT }}
+          persist-credentials: true
       - name: Download image
         run: wget --no-check-certificate "https://drive.usercontent.google.com/download?id=1qkruX6N1Lp6KQivwoP-aNBEoLIHIWBuN&confirm=t" -O "image.jpg"
       - name: Setup Go
@@ -24,6 +24,6 @@ jobs:
         run: go run converter.go
       - name: Remove base image
         run: rm ./image.jpg
-      - uses: stefanzweifel/git-auto-commit-action@v6
+      - uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: update spread image
