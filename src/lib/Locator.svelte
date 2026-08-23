@@ -10,10 +10,12 @@
     import Chibi from "./Chibi.svelte";
 
     let {
-		selectedCharacterSlug = $bindable('edelgard_broken')
+		selectedCharacterSlug = $bindable('edelgard_broken'),
+        edit = false
 	}:
 	{
 		selectedCharacterSlug?: string | null
+        edit?: boolean | null
 	} = $props();
 
     let scale: number = $state(1);
@@ -26,6 +28,9 @@
     }
 
     function goToSelectedCharacter() {
+        if (!positionsByCharacterSlug[selectedCharacterSlug || '']) {
+            return
+        }
         const position = positionsByCharacterSlug[selectedCharacterSlug || ''] || {
             scale: 1,
             x: 0,
@@ -97,6 +102,7 @@
                 selectedCharacterSlug = scs;
                 goToSelectedCharacter();
             }}
+            edit={edit}
         />
 
         <button onclick="{() => goToOutfitPopup()}">Read her detailed info</button>
@@ -107,7 +113,7 @@
             <ViewportIndicator {x} {y} {scale} src={getPublicImageLink("spread.webp")}/>
         </div>
 
-        {#if false}
+        {#if edit}
             <p id="coordinates-p">
                 "{selectedCharacterSlug}": &lbrace;scale: {formatScale(scale)}, x: {formatCoordinate(x)}, y: {formatCoordinate(y)}&rbrace;,
             </p>

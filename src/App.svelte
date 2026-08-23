@@ -44,6 +44,7 @@
   // Route table
   const routes: {[hash: string]: Component} = {
     '/': Locator,
+    '/edit': Locator,
     '/admin': Admin,
   };
 
@@ -66,10 +67,12 @@
     </ul>
   </nav>
 
-  {#key routeData.route + JSON.stringify(routeData.params)}
+{#key routeData.route + JSON.stringify(routeData.params)}
   {#if routeData.route in routes}
     {#if routeData.route === '/'}
       <Locator selectedCharacterSlug={routeData.params["cs"]} />
+    {:else if routeData.route === '/edit'}
+      <Locator selectedCharacterSlug={routeData.params["cs"]} edit={true} />
     {:else if routeData.route === '/admin'}
       <Admin />
     {/if}

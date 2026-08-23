@@ -3,10 +3,12 @@
     import { positionsByCharacterSlug } from "./positions";
 
 	let {
-		selectedCharacterSlug = $bindable('edelgard_broken')
+		selectedCharacterSlug = $bindable('edelgard_broken'),
+		edit = false
 	}:
 	{
 		selectedCharacterSlug: string | null
+		edit: boolean | null
 	} = $props();
 
 	const choices : {
@@ -25,7 +27,14 @@
 			})
 			return outfits;
 		})
-		.filter(outfit => Object.hasOwn(positionsByCharacterSlug, outfit.value))
+		.map(outfit => { // To display characters without a position in browser devtools
+			if (!Object.hasOwn(positionsByCharacterSlug, outfit.value)) {
+				console.log(`missing position: ${outfit.value}`)
+				outfit.text += " (no location yet)"
+			}
+			return outfit
+		})
+		.filter(outfit => edit || Object.hasOwn(positionsByCharacterSlug, outfit.value))
 		.sort((a, b) => a.text > b.text ? 1 : -1)
 
 
