@@ -234,6 +234,17 @@ const threeHousesProfessionalsGroup = {
     slug: 'professionals',
 }
 
+const fortunesWeaveGamePrecursor = {
+    name: "Fortune's Weave",
+    nameSlug: "fortunes_weave",
+    darkColor: "",
+    lightColor: "",
+}
+const fortunesWeaveDagdanGroup = {
+    name: "Dagdan",
+    slug: "dagdan",
+}
+
 export const baseMetadata: GameBaseMetadata[] = [
     {
         ...awakeningGamePrecursor,
@@ -1359,6 +1370,14 @@ export const baseMetadata: GameBaseMetadata[] = [
                         outfitWeightThresholdInLb: 350,
                         introducedAfterDonation: 1046,
                     },
+                    {
+                        "outfitWeightThresholdInLb": 500.0,
+                        "mainShape": "⌛",
+                        secondaryShape: "⌛",
+                        "outfit": "Legendary replendent",
+                        "outfitSlug": "legendary_resplendent",
+                        introducedAfterDonation: 1409
+                    }
                 ]
             },
             {
@@ -4556,6 +4575,23 @@ export const baseMetadata: GameBaseMetadata[] = [
                     },
                 ],
             },
+            {
+                "name": "Jormungandr",
+                "nameSlug": "jormungandr",
+                "heightInCm": 287.0,
+                "build": 'Giant',
+                "group": heroesBook68Group,
+                "outfits": [
+                    {
+                        outfit: "Base",
+                        outfitSlug: "base",
+                        mainShape: "🟣",
+                        secondaryShape: "🍐",
+                        outfitWeightThresholdInLb: 900,
+                        introducedAfterDonation: 1408,
+                    },
+                ]
+            },
         ],
     },
     {
@@ -6548,6 +6584,13 @@ export const baseMetadata: GameBaseMetadata[] = [
                         "outfitSlug": "valentine",
                         introducedAfterDonation: 473,
                     },
+                    {
+                        "outfitWeightThresholdInLb": 500.0,
+                        "mainShape": "🍐",
+                        "outfit": "Legendary",
+                        "outfitSlug": "legendary",
+                        introducedAfterDonation: 1409
+                    }
                 ]
             },
             {
@@ -7155,4 +7198,44 @@ export const baseMetadata: GameBaseMetadata[] = [
             }
         ],
     },
+    {
+        ...fortunesWeaveGamePrecursor,
+        characters: [
+            {
+                "name": "Theodora",
+                "nameSlug": "theodora",
+                "heightInCm": 177.0,
+                "build": 'Regular',
+                "group": fortunesWeaveDagdanGroup,
+                "outfits": [
+                    {
+                        "outfitWeightThresholdInLb": 650.0,
+                        "mainShape": "🍎",
+                        secondaryShape: "⌛",
+                        "outfit": "Base",
+                        "outfitSlug": "base",
+                        introducedAfterDonation: 1409
+                    }
+                ]
+            },
+            {
+                "name": "Leda",
+                "nameSlug": "leda",
+                "heightInCm": 167.0,
+                "build": 'Regular',
+                "group": fortunesWeaveDagdanGroup,
+                "outfits": [
+                    {
+                        "outfitWeightThresholdInLb": 350.0,
+                        "mainShape": "💎",
+                        secondaryShape: "🍎",
+                        "outfit": "Base",
+                        "outfitSlug": "base",
+                        introducedAfterDonation: 1409
+                    }
+                ]
+            },
+        ]
+    },
 ];
+
