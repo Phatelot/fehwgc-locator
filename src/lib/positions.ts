@@ -864,7 +864,6 @@ export const positionsByCharacterSlug: {[key: string]: Position} = {
 "theodora_broken": {scale: 19.3, x: 19, y: 5.7},
 "theodora_base": {scale: 21.4, x: 19, y: 21.1},
 "leda_broken": {scale: 23.9, x: 16.1, y: 21},
-Start here
 "jormungandr_base": {scale: 21.1, x: 89.9, y: 89.5},
 "caeda_marths_faithful": {scale: 23.5, x: 77.5, y: 40.2},
 "ingrid_base": {scale: 22, x: 60.7, y: 59.8},
